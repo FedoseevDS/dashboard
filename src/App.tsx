@@ -1,3 +1,3 @@
-const App = () => <div>проверка связи</div>
+const App = () => <div>проверка связи</div>;
 
-export default App
+export default App;
