@@ -36,7 +36,28 @@ export default tseslint.config(
       'perfectionist/sort-imports': [
         'error',
         {
+          customGroups: {
+            type: {
+              'internal-types': ['types', 'types/*'],
+            },
+            value: {
+              'internal-pages': ['pages', 'pages/*'],
+            },
+          },
           environment: 'node',
+          groups: [
+            'type',
+            ['builtin', 'external'],
+            'internal-type',
+            'internal',
+            'internal-pages',
+            ['parent-type', 'sibling-type', 'index-type'],
+            ['parent', 'sibling', 'index'],
+            'object',
+            'side-effect',
+            ['style', 'side-effect-style'],
+            'unknown',
+          ],
           ignoreCase: true,
           maxLineLength: undefined,
           newlinesBetween: 'always',
