@@ -8,7 +8,9 @@ export default defineConfig({
   resolve: {
     alias: {
       pages: resolve(__dirname, './src/pages'),
+      store: resolve(__dirname, './src/store'),
     },
+    extensions: ['.ts', '.tsx', '.css'],
   },
   server: {
     port: 5005,
