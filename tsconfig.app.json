@@ -10,6 +10,7 @@
     "paths": {
       "*": ["./src/*"],
       "pages": ["./src/pages/*"],
+      "store": ["./src/store/*"],
     },
 
     /* Bundler mode */

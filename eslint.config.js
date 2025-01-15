@@ -42,6 +42,7 @@ export default tseslint.config(
             },
             value: {
               'internal-pages': ['pages', 'pages/*'],
+              'internal-store': ['store', 'store/*'],
             },
           },
           environment: 'node',
@@ -51,6 +52,7 @@ export default tseslint.config(
             'internal-type',
             'internal',
             'internal-pages',
+            'internal-store',
             ['parent-type', 'sibling-type', 'index-type'],
             ['parent', 'sibling', 'index'],
             'object',
