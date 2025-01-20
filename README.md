@@ -7,4 +7,5 @@
 1-dashboard - подготовка проекта к работе  
 2-dashboard - установка prettier, eslint  
 3-dashboard - отрисовка главной страницы  
-4-dashboard - получение данных с сервера
+4-dashboard - получение данных с сервера  
+5-dashboard - отрисовка диаграммы

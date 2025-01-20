@@ -41,6 +41,7 @@ export default tseslint.config(
               'internal-types': ['types', 'types/*'],
             },
             value: {
+              'internal-components': ['components', 'components/*'],
               'internal-pages': ['pages', 'pages/*'],
               'internal-store': ['store', 'store/*'],
             },
@@ -51,6 +52,7 @@ export default tseslint.config(
             ['builtin', 'external'],
             'internal-type',
             'internal',
+            'internal-components',
             'internal-pages',
             'internal-store',
             ['parent-type', 'sibling-type', 'index-type'],
