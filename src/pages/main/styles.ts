@@ -5,6 +5,11 @@ export const Container = styled.div`
   flex-direction: column;
   gap: 10px;
   padding: 10px;
+
+  & svg {
+    height: 100%;
+    font-size: 30px;
+  }
 `;
 
 export const TopPanel = styled.div`
@@ -39,11 +44,59 @@ export const Select = styled.div`
     &:focus {
       outline: none;
     }
+  }
+`;
 
-    & > option:hover {
-      border-radius: 7px;
-      cursor: pointer;
-    }
+export const Toggle = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
+  & div {
+    display: flex;
+  }
+
+  & input[type='checkbox'] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+
+  & label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 70px;
+    background: white;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+    border: 1px solid;
+  }
+
+  & label:after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 24px;
+    height: 24px;
+    background: grey;
+    border-radius: 90px;
+    transition: 0.3s;
+    border: 1px solid;
+  }
+
+  & input:checked + label {
+    background: #34495e;
+  }
+
+  & input:checked + label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+  }
+
+  & label:active:after {
+    width: 130px;
   }
 `;
 

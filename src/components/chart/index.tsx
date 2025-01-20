@@ -42,8 +42,6 @@ export function ReactECharts({
     };
   }, [theme]);
 
-  console.log('option', option);
-
   useEffect(() => {
     // Update chart
     if (chartRef.current !== null) {
