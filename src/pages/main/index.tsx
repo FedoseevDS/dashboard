@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { FaMoon } from 'react-icons/fa';
+import { FiSun } from 'react-icons/fi';
 
 import { ReactECharts } from 'components/chart';
 
 // import { useGetDataQuery } from 'store/requests';
 import { data } from './const';
-import { Chart, Container, Select, TopPanel } from './styles';
+import { Chart, Container, Select, Toggle, TopPanel } from './styles';
 
 const option = ({ data, ...props }) => {
   // const date = data?.data?.map((i: { date: string }) => i.date.split('T')[0]);
@@ -59,6 +61,7 @@ const option = ({ data, ...props }) => {
 
 const Main = () => {
   const [selectValue, setSelectValue] = useState('Basic line');
+  const [isTheme, setIsTheme] = useState(false);
 
   // const { data = [] } = useGetDataQuery({ limit: 100 });
 
@@ -83,11 +86,24 @@ const Main = () => {
             <option value="Basic bar">Basic bar</option>
           </select>
         </Select>
+        <Toggle>
+          <FiSun />
+          <div>
+            <input
+              id="switch"
+              onChange={(e) => setIsTheme(e.target.checked)}
+              type="checkbox"
+            />
+            <label for="switch">Toggle</label>
+          </div>
+          <FaMoon />
+        </Toggle>
       </TopPanel>
       <Chart>
         <ReactECharts
           option={option({ data, [selectValue]: selectValue })}
           settings={selectValue}
+          theme={isTheme ? 'dark' : 'light'}
         />
       </Chart>
     </Container>
