@@ -1,14 +1,20 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const requestsApi = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'http://api.marketstack.com/v1/eod',
-  }),
+  baseQuery: fetchBaseQuery(),
   endpoints: (builder) => ({
-    getData: builder.query({
-      query: ({ limit }) => ({
+    getDataBinance: builder.query({
+      query: () => ({
         method: 'get',
-        url: `?access_key=d74202f81225b5631e505aff97275f88&symbols=AAPL&limit=${limit}`,
+        params: { interval: '1d', limit: 100, symbol: 'BTCUSDT' },
+        url: `https://api.binance.com/api/v3/klines`,
+      }),
+    }),
+    getDataMobula: builder.query({
+      query: () => ({
+        method: 'get',
+        params: { amount: 100, asset: 'Bitcoin', period: '1d' },
+        url: `https://production-api.mobula.io/api/1/market/history/pair`,
       }),
     }),
   }),

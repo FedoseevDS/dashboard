@@ -15,6 +15,7 @@ export const Container = styled.div`
 export const TopPanel = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 10px;
 `;
 
 export const Select = styled.div`
@@ -33,7 +34,7 @@ export const Select = styled.div`
   }
 
   & select {
-    width: 200px;
+    width: 220px;
     border-radius: 7px;
     cursor: pointer;
     background: #34495e;
