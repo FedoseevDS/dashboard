@@ -1,18 +1,16 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FaMoon } from 'react-icons/fa';
 import { FiSun } from 'react-icons/fi';
 
 import { ReactECharts } from 'components/chart';
 
-// import { useGetDataQuery } from 'store/requests';
-import { data } from './const';
+import { useGetDataBinanceQuery, useGetDataMobulaQuery } from 'store/requests';
+
 import { Chart, Container, Select, Toggle, TopPanel } from './styles';
 
 const option = ({ data, ...props }) => {
-  // const date = data?.data?.map((i: { date: string }) => i.date.split('T')[0]);
-  // const close = data?.data?.map((i: { close: string }) => i.close);
-  const date = data?.map((i: { date: string }) => i.date.split('T')[0]);
-  const close = data?.map((i: { close: string }) => i.close);
+  const close = data.map(({ close }) => close);
+  const date = data.map(({ time }) => new Date(time).toISOString().split('T')[0]);
 
   return {
     animationDuration: 3000,
@@ -59,19 +57,81 @@ const option = ({ data, ...props }) => {
   };
 };
 
+const cryptocurrencies = {
+  Binance: ['BTCUSDT'],
+  Mobula: ['Bitcoin'],
+};
+
 const Main = () => {
   const [selectValue, setSelectValue] = useState('Basic line');
   const [isTheme, setIsTheme] = useState(false);
+  const [selectedServer, setSelectedServer] = useState<string[]>([]);
 
-  // const { data = [] } = useGetDataQuery({ limit: 100 });
+  const { data: dataBinance = [] } = useGetDataBinanceQuery(null);
+  const { data: dataMobula = [] } = useGetDataMobulaQuery(null);
+
+  const filterData = dataBinance.reduce((prev, item) => {
+    const convertItem = item.reduce((p, i: number | string, idx: number) => {
+      return {
+        ...p,
+        ...(idx === 1 && { open: i }),
+        ...(idx === 2 && { high: i }),
+        ...(idx === 3 && { low: i }),
+        ...(idx === 4 && { close: i }),
+        ...(idx === 5 && { volume: i }),
+        ...(idx === 6 && { time: i }),
+      };
+    }, {});
+
+    return [...prev, convertItem];
+  }, []);
+
+  const handleServer = useCallback(
+    ({ target }: { target: { value: string } }) => {
+      if (target.value === 'Выберите сервер') {
+        return setSelectedServer([]);
+      }
+
+      const updateSelect = selectedServer.includes(target.value)
+        ? selectedServer.filter((i) => i !== target.value)
+        : [...selectedServer, target.value];
+
+      setSelectedServer(updateSelect);
+    },
+    [setSelectedServer, selectedServer],
+  );
 
   return (
     <Container>
       <TopPanel>
         <Select>
-          <label>Акции:</label>
-          <select name="stock">
-            <option>AAPL</option>
+          <label>Криптовалюта:</label>
+          <select>
+            {!selectedServer.length && (
+              <option
+                disabled
+                selected
+              >
+                Выберите криптовалюту
+              </option>
+            )}
+            {selectedServer?.map((i: string) => (
+              <optgroup label={i}>
+                {cryptocurrencies[i].map((item: string) => (
+                  <>
+                    <option>{item}</option>
+                  </>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        </Select>
+        <Select>
+          <label>Сервер:</label>
+          <select onChange={handleServer}>
+            <option selected>Выберите сервер</option>
+            <option>Binance</option>
+            <option>Mobula</option>
           </select>
         </Select>
         <Select>
@@ -94,14 +154,14 @@ const Main = () => {
               onChange={(e) => setIsTheme(e.target.checked)}
               type="checkbox"
             />
-            <label for="switch">Toggle</label>
+            <label htmlFor="switch">Toggle</label>
           </div>
           <FaMoon />
         </Toggle>
       </TopPanel>
       <Chart>
         <ReactECharts
-          option={option({ data, [selectValue]: selectValue })}
+          option={option({ data: filterData, [selectValue]: selectValue })}
           settings={selectValue}
           theme={isTheme ? 'dark' : 'light'}
         />
