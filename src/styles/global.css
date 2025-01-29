@@ -1,0 +1,11 @@
+[data-theme="dark"] {
+  --color-bg: gray;
+}
+
+[data-theme="light"] {
+  --color-bg: white;
+}
+
+body {
+  background-color: var(--color-bg);
+}

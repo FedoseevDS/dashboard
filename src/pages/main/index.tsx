@@ -1,8 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FaMoon } from 'react-icons/fa';
 import { FiSun } from 'react-icons/fi';
 
 import { ReactECharts } from 'components/chart';
+
+import { calculateSettingAsThemeString } from 'hooks/themeWindows';
 
 import { useGetDataBinanceQuery, useGetDataMobulaQuery } from 'store/requests';
 
@@ -13,6 +15,8 @@ const option = ({ currency, dataBinance, dataMobula, server, ...props }) => {
   const dateBinance = dataBinance.map(({ time }) => new Date(time).toISOString().split('T')[0]);
 
   const closePriceMobula = dataMobula?.data?.map(({ close }) => close);
+
+  console.log('currency', currency);
 
   return {
     animationDuration: 3000,
@@ -45,7 +49,7 @@ const option = ({ currency, dataBinance, dataMobula, server, ...props }) => {
       text: currency,
     },
     toolbox: {
-      feature: {
+      feature: currency.length && {
         saveAsImage: {},
       },
     },
@@ -72,8 +76,10 @@ const cryptocurrencies = {
 };
 
 const Main = () => {
+  const themeWindow = calculateSettingAsThemeString();
+
   const [selectValue, setSelectValue] = useState('Basic line');
-  const [isTheme, setIsTheme] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light' | undefined>(themeWindow);
   const [selectedServer, setSelectedServer] = useState<string[]>([]);
   const [selectedCurrency, setSelectedCurrency] = useState<string[]>([]);
 
@@ -126,6 +132,10 @@ const Main = () => {
     [setSelectedCurrency, selectedCurrency],
   );
 
+  useEffect(() => {
+    document.querySelector('html')?.setAttribute('data-theme', theme);
+  }, [theme]);
+
   return (
     <Container>
       <TopPanel>
@@ -166,8 +176,9 @@ const Main = () => {
           <FiSun />
           <div>
             <input
+              checked={theme === 'dark' || undefined}
               id="switch"
-              onChange={(e) => setIsTheme(e.target.checked)}
+              onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
               type="checkbox"
             />
             <label htmlFor="switch">Toggle</label>
@@ -185,7 +196,7 @@ const Main = () => {
             server: selectedServer,
           })}
           settings={selectValue}
-          theme={isTheme ? 'dark' : 'light'}
+          theme={theme}
         />
       </Chart>
     </Container>

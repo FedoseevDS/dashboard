@@ -8,8 +8,10 @@ export default defineConfig({
   resolve: {
     alias: {
       components: resolve(__dirname, './src/components'),
+      hooks: resolve(__dirname, './src/hooks'),
       pages: resolve(__dirname, './src/pages'),
       store: resolve(__dirname, './src/store'),
+      styles: resolve(__dirname, './src/styles'),
     },
     extensions: ['.ts', '.tsx', '.css'],
   },
