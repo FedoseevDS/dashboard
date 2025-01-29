@@ -8,9 +8,11 @@ import { useGetDataBinanceQuery, useGetDataMobulaQuery } from 'store/requests';
 
 import { Chart, Container, Select, Toggle, TopPanel } from './styles';
 
-const option = ({ data, ...props }) => {
-  const close = data.map(({ close }) => close);
-  const date = data.map(({ time }) => new Date(time).toISOString().split('T')[0]);
+const option = ({ currency, dataBinance, dataMobula, server, ...props }) => {
+  const closePriceBinance = dataBinance.map(({ close }) => close);
+  const dateBinance = dataBinance.map(({ time }) => new Date(time).toISOString().split('T')[0]);
+
+  const closePriceMobula = dataMobula?.data?.map(({ close }) => close);
 
   return {
     animationDuration: 3000,
@@ -21,19 +23,26 @@ const option = ({ data, ...props }) => {
       right: '1%',
     },
     legend: {
-      data: ['close'],
+      data: currency,
     },
     series: [
       {
         ...(props['Basic area'] ? { areaStyle: {} } : null),
-        data: close,
-        name: 'close',
+        data: closePriceBinance,
+        name: 'BTCUSDT',
+        ...(props['Smoothed line'] && { smooth: true }),
+        type: (props['Basic bar'] && 'bar') || 'line',
+      },
+      {
+        ...(props['Basic area'] ? { areaStyle: {} } : null),
+        data: closePriceMobula,
+        name: 'Bitcoin',
         ...(props['Smoothed line'] && { smooth: true }),
         type: (props['Basic bar'] && 'bar') || 'line',
       },
     ],
     title: {
-      text: 'AAPL',
+      text: currency,
     },
     toolbox: {
       feature: {
@@ -48,7 +57,7 @@ const option = ({ data, ...props }) => {
       trigger: 'axis',
     },
     xAxis: {
-      data: date,
+      data: dateBinance,
       type: 'category',
     },
     yAxis: {
@@ -66,6 +75,7 @@ const Main = () => {
   const [selectValue, setSelectValue] = useState('Basic line');
   const [isTheme, setIsTheme] = useState(false);
   const [selectedServer, setSelectedServer] = useState<string[]>([]);
+  const [selectedCurrency, setSelectedCurrency] = useState<string[]>([]);
 
   const { data: dataBinance = [] } = useGetDataBinanceQuery(null);
   const { data: dataMobula = [] } = useGetDataMobulaQuery(null);
@@ -101,26 +111,32 @@ const Main = () => {
     [setSelectedServer, selectedServer],
   );
 
+  const handleCurrency = useCallback(
+    ({ target }: { target: { value: string } }) => {
+      if (target.value === 'Выберите криптовалюту') {
+        return setSelectedCurrency([]);
+      }
+
+      const updateSelect = selectedCurrency.includes(target.value)
+        ? selectedCurrency.filter((i) => i !== target.value)
+        : [...selectedCurrency, target.value];
+
+      setSelectedCurrency(updateSelect);
+    },
+    [setSelectedCurrency, selectedCurrency],
+  );
+
   return (
     <Container>
       <TopPanel>
         <Select>
           <label>Криптовалюта:</label>
-          <select>
-            {!selectedServer.length && (
-              <option
-                disabled
-                selected
-              >
-                Выберите криптовалюту
-              </option>
-            )}
+          <select onChange={handleCurrency}>
+            <option selected>Выберите криптовалюту</option>
             {selectedServer?.map((i: string) => (
               <optgroup label={i}>
                 {cryptocurrencies[i].map((item: string) => (
-                  <>
-                    <option>{item}</option>
-                  </>
+                  <option>{item}</option>
                 ))}
               </optgroup>
             ))}
@@ -161,7 +177,13 @@ const Main = () => {
       </TopPanel>
       <Chart>
         <ReactECharts
-          option={option({ data: filterData, [selectValue]: selectValue })}
+          option={option({
+            currency: selectedCurrency,
+            dataBinance: selectedServer.includes('Binance') ? filterData : [],
+            dataMobula: selectedServer.includes('Mobula') ? dataMobula : [],
+            [selectValue]: selectValue,
+            server: selectedServer,
+          })}
           settings={selectValue}
           theme={isTheme ? 'dark' : 'light'}
         />
