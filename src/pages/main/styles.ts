@@ -18,36 +18,6 @@ export const TopPanel = styled.div`
   gap: 10px;
 `;
 
-export const Select = styled.div`
-  display: flex;
-  gap: 10px;
-  font-size: 18px;
-
-  & label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 200px;
-    border-radius: 7px;
-    background: #34495e;
-    color: #fff;
-  }
-
-  & select {
-    width: 220px;
-    border-radius: 7px;
-    cursor: pointer;
-    background: #34495e;
-    color: #fff;
-    border: none;
-    padding: 5px;
-
-    &:focus {
-      outline: none;
-    }
-  }
-`;
-
 export const Toggle = styled.div`
   display: flex;
   justify-content: center;

@@ -3,6 +3,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const requestsApi = createApi({
   baseQuery: fetchBaseQuery(),
   endpoints: (builder) => ({
+    fetchData: builder.query({
+      query: ({ params, url }) => ({
+        method: 'get',
+        params,
+        url,
+      }),
+    }),
     getDataBinance: builder.query({
       query: () => ({
         method: 'get',
