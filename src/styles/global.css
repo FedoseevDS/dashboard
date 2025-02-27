@@ -9,3 +9,7 @@
 body {
   background-color: var(--color-bg);
 }
+
+button {
+  border: none;
+}
