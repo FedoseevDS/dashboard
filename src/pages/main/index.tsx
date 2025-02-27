@@ -6,12 +6,11 @@ import { ReactECharts } from 'components/chart';
 import Select from 'components/select';
 
 import { calculateSettingAsThemeString } from 'hooks/themeWindows';
-
-import { useGetDataBinanceQuery, useGetDataMobulaQuery } from 'store/requests';
+import { useDynamicData } from 'hooks/useDynamicData';
 
 import { Chart, Container, Toggle, TopPanel } from './styles';
 
-import { configChart, configServer } from './config';
+import { configBinance, configChart, configMobula } from './config';
 import { option } from './option';
 
 const Main = () => {
@@ -23,12 +22,14 @@ const Main = () => {
   const [itemChart, setItemChart] = useState<string>('Basic line');
   const [itemsStock, setItemsStock] = useState<string[]>([]);
 
-  const { data: dataBinance = [] } = useGetDataBinanceQuery(null);
-  const { data: dataMobula = [] } = useGetDataMobulaQuery(null);
+  const { Binance: dataBinance = [] } = useDynamicData(configBinance);
+  const { Mobula: dataMobula = [] } = useDynamicData(configMobula);
+
+  const commonConfig = useMemo(() => [configBinance, configMobula], []);
 
   const filterConfig = useMemo(() => {
-    return configServer.filter((i) => itemsServer?.includes(i.name));
-  }, [itemsServer]);
+    return commonConfig.filter((i) => itemsServer.includes(i.name));
+  }, [itemsServer, commonConfig]);
 
   const filterData = dataBinance.reduce((prev: [], item: (number | string)[]) => {
     const convertItem = item.reduce((p, i: number | string, idx: number) => {
@@ -77,6 +78,22 @@ const Main = () => {
     });
   }, []);
 
+  useEffect(() => {
+    setItemsStock((prevItemsStock) => {
+      let updatedItemsStock = [...(prevItemsStock || [])];
+
+      if (!itemsServer.includes('Mobula')) {
+        updatedItemsStock = updatedItemsStock.filter((item) => item !== 'Bitcoin');
+      }
+
+      if (!itemsServer.includes('Binance')) {
+        updatedItemsStock = updatedItemsStock.filter((item) => item !== 'BTCUSDT');
+      }
+
+      return updatedItemsStock;
+    });
+  }, [itemsServer]);
+
   return (
     <Container>
       <TopPanel>
@@ -88,7 +105,7 @@ const Main = () => {
           valueStock={itemsStock}
         />
         <Select
-          config={configServer}
+          config={commonConfig}
           name="Сервер:"
           onChangeServer={handleItemsServer}
           placeholder="Выберите сервер"

@@ -71,7 +71,7 @@ const Select = ({
             <div>{!valueStock.length ? placeholder : valueStock.join(', ')}</div>
             <GoChevronDown />
           </button>
-          {isClick && (
+          {isClick && config.length > 0 && (
             <DropDown>
               {config?.map((i, index) => (
                 <div key={i.name + index}>
