@@ -11,18 +11,25 @@ type OptionProps = {
   currency: string[];
   dataBinance: { close: string; time: string }[];
   dataMobula: { data: { close: number }[] };
+  limit: number;
 } & DynamicProps;
 
 export const option = ({
   currency,
   dataBinance,
   dataMobula,
+  limit,
   ...props
 }: OptionProps): EChartsOption => {
+  const currentDate = new Date();
+
+  const dates = Array.from({ length: limit }, (_, i) => {
+    const pastDate = new Date(currentDate);
+    pastDate.setDate(currentDate.getDate() - i);
+    return pastDate.toISOString().split('T')[0];
+  });
+
   const closePriceBinance = dataBinance.map(({ close }: { close: string }) => close);
-  const dateBinance = dataBinance.map(
-    ({ time }: { time: string }) => new Date(time).toISOString().split('T')[0],
-  );
 
   const closePriceMobula = dataMobula?.data?.map(({ close }: { close: number }) => close);
 
@@ -70,7 +77,7 @@ export const option = ({
       trigger: 'axis',
     },
     xAxis: {
-      data: currency.includes('BTCUSDT') ? dateBinance : undefined,
+      data: currency.length > 0 ? dates : undefined,
       type: 'category',
     },
     yAxis: {
