@@ -1,4 +1,5 @@
-Задача: реализовать статистику данных через графики.  
+Задача: реализовать статистику данных через графики.
+
 Стек: vita, react, ts, echarts, normalize.css, prettier eslint-config-prettier, eslint-plugin-perfectionist, eslint-plugin-prettier, eslint-plugin-react, react-router, styled-components, @types/node, react-redux, @reduxjs/toolkit, react-icons
 
 Описание веток:
