@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { GoChevronDown } from 'react-icons/go';
 
 import { Container, DropDown, Label, SelectForm } from './styles';
@@ -17,16 +17,30 @@ const Select = ({
   valueStock,
 }: SelectProps) => {
   const [isClick, setIsClick] = useState<boolean>(false);
+  const selectRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = useCallback(() => {
     setIsClick((i) => !i);
   }, []);
 
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+      setIsClick(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
   return (
-    <Container>
+    <Container ref={selectRef}>
       <Label>{name}</Label>
       {valueServer && (
-        <SelectForm>
+        <SelectForm isClick={isClick}>
           <button onClick={handleSelect}>
             <div>{!valueServer.length ? placeholder : valueServer.join(', ')}</div>
             <GoChevronDown />
@@ -46,7 +60,7 @@ const Select = ({
         </SelectForm>
       )}
       {valueChart && (
-        <SelectForm>
+        <SelectForm isClick={isClick}>
           <button onClick={handleSelect}>
             <div>{valueChart || placeholder}</div>
             <GoChevronDown />
@@ -56,7 +70,10 @@ const Select = ({
               {config?.map((i, index) => (
                 <button
                   key={i.name + index}
-                  onClick={onChangeChart}
+                  onClick={(e) => {
+                    setIsClick(false);
+                    if (onChangeChart) onChangeChart(e);
+                  }}
                 >
                   {i.name}
                 </button>
@@ -66,7 +83,7 @@ const Select = ({
         </SelectForm>
       )}
       {valueStock && (
-        <SelectForm>
+        <SelectForm isClick={isClick}>
           <button onClick={handleSelect}>
             <div>{!valueStock.length ? placeholder : valueStock.join(', ')}</div>
             <GoChevronDown />

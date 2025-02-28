@@ -16,7 +16,7 @@ export const Label = styled.div`
   color: #fff;
 `;
 
-export const SelectForm = styled.div`
+export const SelectForm = styled.div<{ isClick?: boolean }>`
   position: relative;
 
   & > button {
@@ -32,6 +32,8 @@ export const SelectForm = styled.div`
     & > svg {
       position: absolute;
       right: 0;
+      transition: transform 0.4s ease-in-out;
+      transform: ${({ isClick }) => (isClick ? 'rotate(180deg)' : 'rotate(0deg)')};
     }
 
     &:hover {
