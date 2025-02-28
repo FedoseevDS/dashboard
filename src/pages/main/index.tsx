@@ -31,25 +31,39 @@ const Main = () => {
     return commonConfig.filter((i) => itemsServer.includes(i.name));
   }, [itemsServer, commonConfig]);
 
-  const filterData = dataBinance.reduce((prev: [], item: (number | string)[]) => {
-    const convertItem = item.reduce((p, i: number | string, idx: number) => {
-      return {
-        ...p,
-        ...(idx === 1 && { open: i }),
-        ...(idx === 2 && { high: i }),
-        ...(idx === 3 && { low: i }),
-        ...(idx === 4 && { close: i }),
-        ...(idx === 5 && { volume: i }),
-        ...(idx === 6 && { time: i }),
-      };
-    }, {});
+  const limit = useMemo(
+    () =>
+      commonConfig.reduce((prev: number, item) => {
+        if ('limit' in item.params) {
+          return item.params.limit;
+        }
+        if ('amount' in item.params) {
+          return item.params.amount;
+        }
+        return prev;
+      }, 0),
+    [commonConfig],
+  );
 
-    return [...prev, convertItem];
-  }, []);
+  const filterData = useMemo(
+    () =>
+      dataBinance.reduce((prev: [], item: (number | string)[]) => {
+        const convertItem = item.reduce((p, i: number | string, idx: number) => {
+          return {
+            ...p,
+            ...(idx === 1 && { open: i }),
+            ...(idx === 2 && { high: i }),
+            ...(idx === 3 && { low: i }),
+            ...(idx === 4 && { close: i }),
+            ...(idx === 5 && { volume: i }),
+            ...(idx === 6 && { time: i }),
+          };
+        }, {});
 
-  useEffect(() => {
-    document.querySelector('html')?.setAttribute('data-theme', theme || 'light');
-  }, [theme]);
+        return [...prev, convertItem];
+      }, []),
+    [dataBinance],
+  );
 
   const handleItemsServer = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     const text = e.currentTarget.textContent || '';
@@ -77,6 +91,10 @@ const Main = () => {
       return [...prevItem, text];
     });
   }, []);
+
+  useEffect(() => {
+    document.querySelector('html')?.setAttribute('data-theme', theme || 'light');
+  }, [theme]);
 
   useEffect(() => {
     setItemsStock((prevItemsStock) => {
@@ -138,6 +156,7 @@ const Main = () => {
             dataBinance: itemsServer.includes('Binance') ? filterData : [],
             dataMobula: itemsServer.includes('Mobula') ? dataMobula : [],
             [itemChart]: itemChart,
+            limit,
           })}
           theme={theme}
         />
