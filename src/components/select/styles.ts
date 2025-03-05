@@ -12,8 +12,8 @@ export const Label = styled.div`
   justify-content: center;
   width: 230px;
   border-radius: 7px;
-  background: #34495e;
-  color: #fff;
+  background: ${({ theme }) => theme.colors.background3};
+  color: ${({ theme }) => theme.colors.color1};
 `;
 
 export const SelectForm = styled.div<{ isClick?: boolean }>`
@@ -26,8 +26,9 @@ export const SelectForm = styled.div<{ isClick?: boolean }>`
     height: 32px;
     width: 230px;
     border-radius: 7px;
-    background: #34495e;
-    color: #fff;
+    background: ${({ theme }) => theme.colors.background3};
+    color: ${({ theme }) => theme.colors.color1};
+    border: none;
 
     & > svg {
       position: absolute;
@@ -52,23 +53,24 @@ export const DropDown = styled.div`
   padding: 5px 5px;
   position: absolute;
   z-index: 20;
-  background: #34495e;
+  background: ${({ theme }) => theme.colors.background3};
   border-radius: 7px;
   margin-top: 5px;
 
   & span {
-    color: #fff;
+    color: ${({ theme }) => theme.colors.color1};
   }
 
   & button {
     cursor: pointer;
     text-align: start;
-    background: #34495e;
-    color: #fff;
+    background: ${({ theme }) => theme.colors.background3};
+    color: ${({ theme }) => theme.colors.color1};
     width: 100%;
+    border: none;
 
     &:hover {
-      background: #6b7987;
+      background: ${({ theme }) => theme.colors.background4};
     }
   }
 `;

@@ -1,10 +1,16 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+type ContainerProps = {
+  theme: 'dark' | 'light';
+};
+
+export const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 10px;
+  background: ${({ theme }) =>
+    theme.theme === 'dark' ? theme.colors.background2 : theme.colors.background1};
 
   & svg {
     height: 100%;
@@ -37,7 +43,7 @@ export const Toggle = styled.div`
     cursor: pointer;
     text-indent: -9999px;
     width: 70px;
-    background: white;
+    background: ${({ theme }) => theme.colors.background1};
     display: block;
     border-radius: 100px;
     position: relative;
@@ -51,14 +57,14 @@ export const Toggle = styled.div`
     left: 5px;
     width: 24px;
     height: 24px;
-    background: grey;
+    background: ${({ theme }) => theme.colors.background2};
     border-radius: 90px;
     transition: 0.3s;
     border: 1px solid;
   }
 
   & input:checked + label {
-    background: #34495e;
+    background: ${({ theme }) => theme.colors.background3};
   }
 
   & input:checked + label:after {

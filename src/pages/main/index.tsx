@@ -5,22 +5,18 @@ import { FiSun } from 'react-icons/fi';
 import { ReactECharts } from 'components/chart';
 import Select from 'components/select';
 
-import { calculateSettingAsThemeString } from 'hooks/themeWindows';
 import { useDynamicData } from 'hooks/useDynamicData';
 
 import { Chart, Container, Toggle, TopPanel } from './styles';
 
 import { configBinance, configChart, configMobula } from './config';
 import { option } from './option';
+import { MainProps } from './types';
 
-const Main = () => {
-  const themeWindow = calculateSettingAsThemeString();
-
-  const [theme, setTheme] = useState<'dark' | 'light' | undefined>(themeWindow);
-
-  const [itemsServer, setItemsServer] = useState<string[]>([]);
+const Main = ({ theme, toggleTheme }: MainProps) => {
+  const [itemsServer, setItemsServer] = useState<Array<string>>([]);
   const [itemChart, setItemChart] = useState<string>('Basic line');
-  const [itemsStock, setItemsStock] = useState<string[]>([]);
+  const [itemsStock, setItemsStock] = useState<Array<string>>([]);
 
   const { Binance: dataBinance = [] } = useDynamicData(configBinance);
   const { Mobula: dataMobula = [] } = useDynamicData(configMobula);
@@ -93,10 +89,6 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
-    document.querySelector('html')?.setAttribute('data-theme', theme || 'light');
-  }, [theme]);
-
-  useEffect(() => {
     setItemsStock((prevItemsStock) => {
       let updatedItemsStock = [...(prevItemsStock || [])];
 
@@ -116,24 +108,25 @@ const Main = () => {
     <Container>
       <TopPanel>
         <Select
-          config={filterConfig}
-          name="Криптовалюта:"
-          onChangeStock={handleItemsStock}
+          label="Криптовалюта:"
+          onChange={handleItemsStock}
+          options={filterConfig}
           placeholder="Выберите криптовалюту"
-          valueStock={itemsStock}
+          stock={true}
+          value={itemsStock}
         />
         <Select
-          config={commonConfig}
-          name="Сервер:"
-          onChangeServer={handleItemsServer}
+          label="Сервер:"
+          onChange={handleItemsServer}
+          options={commonConfig}
           placeholder="Выберите сервер"
-          valueServer={itemsServer}
+          value={itemsServer}
         />
         <Select
-          config={configChart}
-          name="Тип диаграммы:"
-          onChangeChart={handleItemChart}
-          valueChart={itemChart}
+          label="Тип диаграммы:"
+          onChange={handleItemChart}
+          options={configChart}
+          value={itemChart}
         />
         <Toggle>
           <FiSun />
@@ -141,7 +134,7 @@ const Main = () => {
             <input
               checked={theme === 'dark' || undefined}
               id="switch"
-              onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+              onChange={(e) => toggleTheme(e.target.checked ? 'dark' : 'light')}
               type="checkbox"
             />
             <label htmlFor="switch">Toggle</label>
