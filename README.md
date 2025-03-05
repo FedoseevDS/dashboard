@@ -1,6 +1,6 @@
 Задача: реализовать статистику данных через графики.
 
-Стек: vita, react, ts, echarts, normalize.css, prettier eslint-config-prettier, eslint-plugin-perfectionist, eslint-plugin-prettier, eslint-plugin-react, react-router, styled-components, @types/node, react-redux, @reduxjs/toolkit, react-icons
+Стек: vita, react, ts, echarts, normalize.css, prettier eslint-config-prettier, eslint-plugin-perfectionist, eslint-plugin-prettier, eslint-plugin-react, styled-components, @types/node, react-redux, @reduxjs/toolkit, react-icons
 
 Описание веток:
 
@@ -17,6 +17,7 @@
 11-dashboard - создание универсального запроса на разные серверы  
 12-dashboard - поправил селекты  
 13-dashboard - поправил отображение дат в графике  
-14-dashboard - рефакторинг кода, version 0.0.2
+14-dashboard - рефакторинг кода, version 0.0.2  
+15-dashboard - вынес переключатель темы в отдельную компоненту и сделал глобальные стили
 
 website - https://dashboard-2025.netlify.app/

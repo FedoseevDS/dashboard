@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FaMoon } from 'react-icons/fa';
-import { FiSun } from 'react-icons/fi';
 
 import { ReactECharts } from 'components/chart';
 import Select from 'components/select';
+import ToggleTheme from 'components/toggleTheme';
 
 import { useDynamicData } from 'hooks/useDynamicData';
 
-import { Chart, Container, Toggle, TopPanel } from './styles';
+import { Chart, Container, TopPanel } from './styles';
+
+import { CommonProps } from 'types/global';
 
 import { configBinance, configChart, configMobula } from './config';
 import { option } from './option';
-import { MainProps } from './types';
 
-const Main = ({ theme, toggleTheme }: MainProps) => {
+const Main = ({ setTheme, theme }: CommonProps) => {
   const [itemsServer, setItemsServer] = useState<Array<string>>([]);
   const [itemChart, setItemChart] = useState<string>('Basic line');
   const [itemsStock, setItemsStock] = useState<Array<string>>([]);
@@ -128,19 +128,10 @@ const Main = ({ theme, toggleTheme }: MainProps) => {
           options={configChart}
           value={itemChart}
         />
-        <Toggle>
-          <FiSun />
-          <div>
-            <input
-              checked={theme === 'dark' || undefined}
-              id="switch"
-              onChange={(e) => toggleTheme(e.target.checked ? 'dark' : 'light')}
-              type="checkbox"
-            />
-            <label htmlFor="switch">Toggle</label>
-          </div>
-          <FaMoon />
-        </Toggle>
+        <ToggleTheme
+          setTheme={setTheme}
+          theme={theme}
+        />
       </TopPanel>
       <Chart>
         <ReactECharts
