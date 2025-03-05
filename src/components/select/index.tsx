@@ -70,7 +70,7 @@ const Select = ({ label, onChange, options, placeholder, stock = false, value }:
   return (
     <Container ref={selectRef}>
       <Label>{label}</Label>
-      <SelectForm isClick={isClick}>
+      <SelectForm $isClick={isClick}>
         <button onClick={handleSelect}>
           <div>{showPlaceholder}</div>
           <GoChevronDown />
